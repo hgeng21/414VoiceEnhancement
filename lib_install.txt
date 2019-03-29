@@ -1,0 +1,29 @@
+python -m pip install --upgrade pip
+pip install pydub
+(install ffmpeg and add PATH to EnvVar)
+pip install pandas
+
+(win64, python 3.6 64x)
+pip3 install https://download.pytorch.org/whl/cpu/torch-1.0.1-cp36-cp36m-win_amd64.whl
+pip3 install torchvision
+
+pip install imageio
+pip install imageio-ffmpeg
+pip install scikit-image
+pip install glob3
+pip install librosa
+
+pip uninstall numpy
+pip uninstall scipy
+pip uninstall scikit-learn
+
+pip install intel-numpy
+pip install intel-scipy
+pip install intel-scikit-learn
+
+pip install PyQt5
+
+CJD3-MHTW8JGM
+
+C:\Users\Han Geng\AppData\Local\Programs\Python\Python36\Scripts\
+C:\Users\Han Geng\AppData\Local\Programs\Python\Python36\
