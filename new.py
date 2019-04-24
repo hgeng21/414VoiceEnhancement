@@ -97,6 +97,7 @@ class videoNetwork(nn.Module):
         print("the shape of out is: {}".format(out.shape))
         out = out.view(out.size(0),224,-1)
         print("reshaped out = {}".format(out.shape))
+        
         return out
 
 
