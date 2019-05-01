@@ -149,6 +149,8 @@ In order to generate a model for speech recognition and noise removal, we need a
 \label{fig:framework}
 \end{figure}
 
+With each selected audio segment, we transfer the .wav file into image file so that it displays the power spectrogram of the audio. Then we generate noise signals upon this spectrogram to obtain a noisy audio spectrogram that can be later used for training purpose.\\
+
 
 
 %%% add words %%%
@@ -205,222 +207,73 @@ Low and high shelf filters are typically implemented in series, and are typicall
 
 From the below output spectrogram table, low shelf filter tend to lower the wave flux to 0, thus low shelf is able to gain negative to higher wave value and gain positive wave value to a lower value. (Low shelf has a brighter downside while highshelf has a brighter upperside) Vise versa, high shelf is able to gain negative to lower wave value and gain positive wave value to a higher value.\\
 
-\begin{figure}[h!]
-\includegraphics[scale=0.30]{orig_low.jpeg}
+\begin{figure}[H]
+\includegraphics[scale=0.25]{orig_low.jpeg}
 \caption{Low shelf}
 \label{fig:framework}
 \end{figure}
 
-\begin{figure}[h!]
-\includegraphics[scale=0.30]{high.jpeg}
+\begin{figure}[H]
+\includegraphics[scale=0.25]{high.jpeg}
 \caption{High shelf}
 \label{fig:framework}
 \end{figure}
 
-\begin{figure}[h!]
-\includegraphics[scale=0.30]{HL.jpeg.jpeg}
+\begin{figure}[H]
+\includegraphics[scale=0.25]{HL.jpeg}
 \caption{Low and High shelf (offset each other as comparison to Low shelf and High shelf)}
 \label{fig:framework}
 \end{figure}
 
 
 
+Reverberation is an acoustic phenomenon, in which reflections cause the sound to be prolonged and ring even after the sound source stops \cite{24}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-%%%%%%% That's sara's stuff below %%%%%%%%%%%
-%\begin{table}[h]\small
-%  \centering
-%  \caption{Demographics of the PPMI}
-%  \begin{tabular}{|>{\bfseries}c|*{7}{c|}}\hline
-%    \multirow{2}{*}{\bfseries Data Type}
-%    & \multicolumn{2}{c|}{\bfseries Class}
-%    &\multicolumn{2}{c|}{\bfseries Sex}
-%    & \multicolumn{3}{c|}{\bfseries Age} \\\cline{2-8}
-%    & \textbf{PD} & \textbf{HC} & \textbf{F}&\textbf{M} & \textbf{(25-50)}&\textbf{(50-76)} &\textbf{(75-100)}\\ \hline
-%           Number of Subjects   &411 & 187 & 217 & 381 & 81&472&45      \\ \hline
-%  \end{tabular}
-%  \label{tab:ppmi}
-%\end{table}
-
-The overview of our proposed method is presented in Fig.\ref{fig:framework}  which has $3$ general steps including: 1- Preprocessing; 2- Feature Extraction; and 3- Classification. Next, each step is explained in detail. The goals of CAD system goals are:
-\begin{enumerate}
-\item Extracting the volume based features from the MR T1 images using the automated surface-based analysis package FreeSurfer.
-\item Comparing the capability of different types of classifiers for diagnosing PD.
-\end{enumerate}
-
-\begin{figure}[h!]
-%\centering
-\includegraphics[scale=0.37]{flchart.png}
-\caption{The general framework of the proposed methods.}
-\label{fig:framework}
-\end{figure}
-\subsection{Preprocessing}
-Preprocessing is an essential step in designing the CAD system which provides informative data for the next steps. In this paper, for computing the volumetric information of the MRI subject’s, several preprocessing steps are needed. The Freesurfer image analysis suite is used for performing preprocessing over the 3D MRI data. FreeSurfer is a software package for the analysis and visualization of structural and functional neuroimaging data from cross-sectional or longitudinal studies \cite{16}. The FreeSurfer pipeline performs cortical reconstruction and subcortical volumetric segmentation including the removal of non-brain tissue (skull, eyeballs and skin), using an automated algorithm with the ability to successfully segment the whole brain without any user intervention \cite{f}. FreeSurfer is the structural MRI analysis software of choice for the Human Connectome Project which is documented and freely available for download on-line (http://surfer.nmr.mgh.harvard.edu/). In total 31 preprocessing steps has completed using FreeSurfer, of which some are shown in Fig.\ref{fig:prepsteps}.
-\begin{figure}
-\centering
-\includegraphics[scale=0.4]{Preprocessing.png}
-\caption{Preprocessing steps.}
-\label{fig:prepsteps}
-\end{figure}
-
-There are two types of failures in the preprocessing step which can be categorized into hard failure and soft failure. Hard failures are related to the subjects for whom preprocessing is not successful and the soft failure are related to the subjects that are preprocessed but there are some problem in the results of preprocessing. Out of $568$ subjects MRIs, $388$ images were successfully preprocessed. Other images were excluded from
-the dataset due to poor quality of the original images
-or unknown CDR labels.
-
-\subsection{Feature Extraction}
-After preprocessing using FreeSurfer, a list of volume based features are extracted from different regions of the brain. These features are captured from the regions segmented by brain parcellation using FreeSurfer. Some of the features collected in the left and right hemispheres of the brain are listed below:
-\begin{enumerate}
-	\item Left and right lateral ventricle
-	\item Left and right cerebellum white matter
-	\item Cerebrospinal fluid (CSF)
-	\item Left and right hippocampus
-	\item left and right hemisphere cortex
-	\item Estimated total intra cranial (eTIV)
-	\item left and right hemisphere surface holes
-\end{enumerate}
-The extracted feature data is based on Equation \ref{eq:fd}.
-\begin{equation}
-FeatureData =
-\begin{bmatrix}
-    f_{11}       & f_{12} & f_{13} & \dots & f_{1n} \\
-    f_{21}       & x_{22} & x_{23} & \dots & f_{2n} \\
-    %\hdotsfor{5} \\
-    \qquad \ldots\\
-    f_{s1}       & f_{s2} & f_{s3} & \dots & f_{sn}
-\end{bmatrix}
-%FeatureData = [f_{i,j}] \quad i \in [1:n], j\in [1:m]\\
-\label{eq:fd}
-\end{equation}
-Where $s$ is the number of subjects and $n$ is the number of extracted features for that subject. In this study, $n$ is $388$ and $m$ is $139$.
-
-Furthermore, there are two other type of features which are provided by the PPMI dataset which are age and sex for each subject. Thus, these two biographical information could be added to the extracted feature which gives feature data with the size $(388*141)$.
-\subsection{Classification}
-In this part the aim is using the extracted volume based features for classifying the MRI data into two classes of PD and HC. In our study, three types of supervised classification algorithm are used. Next, each classification method is described:
-\begin{itemize}
-\item \textbf{Logistic Regression (LR):}\\
-Logistic regression (LR) is a statistical technique which is used in machine learning for binary classification problems. LR belongs to the family of MaxEnt classifiers known as the exponential or log-linear classifiers \cite{LR}. Like naive Bayes, it works by extracting some set of weighted features from the input, taking logs, and combining them linearly (meaning that each feature is multiplied by a weight and then added up) \cite{17}. Thus, this model is a suitable binary classifier for our problem.
-\item \textbf{Random Forest (RF):}\\
-Random forests (RF) is an ensemble learning method for classification, regression and other tasks. This method is presented by Breiman \cite{18}, which creates a set of decision trees from a randomly selected subset of training data. It then aggregates the votes from different decision trees to define final class of the test object. Each tree in a random forest is a weak classifier. A large set of trees trained with randomly chosen data makes a single decision on a majority basis. In the current stage of this research, we tested how accurate decisions can be made by random forests trained by the data coming from a single MRI volume.
-\item \textbf{Support Vector machine (SVM):} \\
-Support vector machine (SVM) \cite{19} is a well-known supervised machine learning algorithm for classification and regression. It performs classification tasks by constructing optimal hyperplanes in a multidimensional space that separates cases of different class labels. This classification method is more popular because it is easier to use, has higher generalization performance and less tuning comparing to other classifiers. In our case, the kernel SVM is used.
-
-\end{itemize}
-
-There is a set of parameters for each classifier that needs to be tuned in order to have a fair comparison.
 
 \section{Results and Discussion}
-In this section, the experimental results for different steps of the proposed CAD system for diagnosis of PD is presented. First the preprocessing step prepares the MRI data for the next steps using FreeSurfer. Fig.\ref{fig:prepres} shows the MRI for subject $3102$ and the resulting image after preprocessing.
+Since we are using pre-recorded audio sample, we are not able to control the environment noise in the audio sample, so we add noise signals to the pure spectrogram manually. We test with two forms of noise generation. One using Gaussian method to generate white noise and the other one simply generates random noise. The purpose is to figure out a better approach to mimic white noise in real life and create noisy audio signal close to what we hear in our lives, which would provide better accuracy in testing the model with real noisy speech.\\
 
-\begin{figure}[!h]\small
-  \centering
-  \subfloat[Original MR image.]{\includegraphics[scale=0.25]{orgimg.png}\label{fig:f1}}%[width=0.5\textwidth]
-  \hfill
-  \subfloat[Preprocessed MR image.]{\includegraphics[scale=0.25]{prep.png}\label{fig:f2}}
-  \caption{Preprocessing results for one of the subjects.}
-  \label{fig:prepres}
+We take a sample wav file and transfer it into an image file (figure A), then using Gaussian noise generation method to create Gaussian noise (figure B), then add it onto the original spectrogram to create noisy audio spectrogram (figure C), all three graphs are shown below.\\
+
+\begin{figure}[H]
+\includegraphics[scale=0.25]{figureA.png}
+\caption{Original Spectrogram}
+\label{fig:framework}
 \end{figure}
-After preprocessing with FreeSurfer, for each subject a list of volume-based features is extracted. Also, age and sex are provided for the PPMI data in their website as demographic information of the patients. Some evaluation has been done over the set of extracted features in terms of their discrimination ability. Since PD is an age related disease, the distribution of data in terms of age feature is plotted. Fig.\ref{fig:agelabel} shows the distribution of age in the dataset for the subjects with PD and HC labels.
-\begin{figure}[h]\small
-\centering
-\includegraphics[scale=0.4]{AgeData.png}
-\caption{Distribution of Data in terms of Age feature.}
-\label{fig:agelabel}
+
+\begin{figure}[H]
+\includegraphics[scale=0.25]{figureB.png}
+\caption{Gaussian noise}
+\label{fig:framework}
 \end{figure}
-The distribution of all the extracted features are plotted in terms of their ability to distinguish the data into two classes of PD and HC. Some of these distributions are shown in Fig.\ref{fig:feateval}. As can be seen in Fig.\ref{fig:feateval}(a), the subjects with PD have higher brain volume compared to healthy ones. Furthermore, the distribution in Fig.\ref{fig:feateval}(b) and (c) illustrate that when people are in the PD category, their CSF and their CC-Anterior  volume size is enlarged. Fig.\ref{fig:feateval}(d) shows that the surface hole volume in PD is noticeably higher than the normal subjects.
-\begin{figure}[h]\small
-  \centering
-  \subfloat[]{\includegraphics[width=0.5\textwidth]{Parkinson-distribution-BrainSegVol.png}\label{fig:f1}}
-  \hfill
-  \subfloat[]{\includegraphics[width=0.5\textwidth]{Parkinson-distribution-CC_Anterior.png}\label{fig:f2}}
-  \\
-    \subfloat[]{\includegraphics[width=0.5\textwidth]{Parkinson-distribution-CSF.png}\label{fig:f1}}
-  \hfill
-  \subfloat[]{\includegraphics[width=0.5\textwidth]{Parkinson-distribution-SurfaceHoles.png}\label{fig:f2}}
-  \caption{Data distributions in terms of the class labels and corresponding features; which are: (a) Brain segmented volume. (b) CC- Anterior. (c) CSF. (d) Surface holes.}\setlength{\belowcaptionskip}{0pt}
-  \label{fig:feateval}
+
+\begin{figure}[H]
+\includegraphics[scale=0.25]{figureC.png}
+\caption{Original Spectrogram with Gaussian Noise added}
+\label{fig:framework}
 \end{figure}
-Another set of evaluation is done over the extracted features. Data for every two features are plotted versus each other based on the corresponding class. Fig.\ref{fig:pairfeat} shows the distribution of data based on the two pair of features including $3rd$ ventricles vs lateral ventricles and $3rd$ ventricles vs. left vessels. In both of them, two features tend to have bigger value when the subject is PD.
 
-\begin{figure}[!tbp]
-  \centering
-  \subfloat[]{\includegraphics[width=0.5\textwidth]{3rd-Ventricle-Left-Lateral-Ventricle.png}\label{fig:f1}}
-  \hfill
-  \subfloat[]{\includegraphics[width=0.5\textwidth]{3rd-Ventricle-Left-vessel.png}\label{fig:f2}}
-  \caption{Data distribution based on the pair of features: (a)3rd ventricle and left lateral ventricle. (b) 3rd ventricle and left vessel.}
-  \label{fig:pairfeat}
+Original Spectrogram with Random Noise added.\\
+
+\begin{figure}[H]
+\includegraphics[scale=0.25]{figureD.png}
+\caption{Random Noise}
+\label{fig:framework}
 \end{figure}
-As explained in the previous section, three types of classifiers are used in this study. These algorithm are run over $388$ samples with $141$ features. Internal and external cross validation is applied with $K=10$ for external and $k=5$ for internal (parameter tunning cross validation). The number of selected samples for the training part is $350$ and for the test part is $38$. Furthermore, the number of PD and HC in each group is presented in Table \ref{tab:trtedata}.
-\begin{table}[h]\small
-\centering
-\caption{Data balance in training and testing parts.}\setlength{\abovecaptionskip}{0pt}
-\begin{tabular}{|c|c|c|c|}
-\hline
-         & PD  & Hc  & Total \\ \hline
-Training & 236 & 114 & 350   \\ \hline
-Test     & 26  & 12  & 38    \\ \hline
-\end{tabular}
-\label{tab:trtedata}
-\end{table}
 
-As mentioned before, the classification algorithm needs a set of parameters for tunning which is selected as follow:
-\begin{itemize}
-\item logistic Regression (LR):\\
-Regularization = $[1e-1, 1e-2, 1e-3, 1e-4, 1e-5]$, Tolerance = [1e-1, 1e-2, 1e-3, 1e-4, 1e-5]
-\item Random Forest (RF):\\
-Number of estimator =$[5, 10, 15, 20, 25]$, Max depth = $[2-10]$
-\item Support Vector Machine (SVM): \\
-C = $[0.1, 1, 10, 100, 1000]$, Gamma = $[10, 1, 1e-1, 1e-2, 1e-3, 1e-4]$, kernels = $[linear, rbf, poly]$
-\end{itemize}
-The evaluation metrics used in this paper for comparing the results of the classification algorithms include accuracy, confusion matrix (recall, precision) and AUC (area under ROC curve). The classification results for LR, RF and SVM are shown in Tables \ref{tab:logit}, \ref{tab:rf}, and \ref{tab:svm}, respectively.
+\begin{figure}[H]
+\includegraphics[scale=0.25]{figureE.png}
+\caption{Original Spectrogram with Random Noise added}
+\label{fig:framework}
+\end{figure}
 
-\begin{table*}[h]\small
-	\centering
-	\caption{Logistic regression performance}
-	\label{tab:logit}
-	\csvautotabular{Logistic.csv}
-\end{table*}
+The resulting spectrograms of these two methods appear to be visually similar, yet it is obvious from the noise signal graphs (figure B and D) that they are different. Gaussian method adds noise in a more uniform way which is more common in real life where the white noise permutes into speakers’ audio signals uniformly. The random method fulfills the task in all aspects, but it will not be as effective in our model during training compare to Gaussian noise addition, for the reason that the noise it generates could not mimic real-life white noise, and this will cause our model to be inaccurately trained. Hence, the Gaussian noise is supposed to be a better choice as white noise addition method for white noise addition onto wav file.\\
 
-\begin{table*}[h]\small
-	\centering
-	\caption{Random forests performance}
-	\label{tab:rf}
-	\csvautotabular{RF.csv}
-\end{table*}
-
-\begin{table*}[h]\small
-	\centering
-	\caption{Support Vector Machine performance}
-	\label{tab:svm}
-	\csvautotabular{SVM.csv}
-\end{table*}
-Table \ref{tab:comp} shows the general comparison between these methods. The best result is for RF. In the table there are two sets of results related to using age/sex feature or doing the classification based only on the extracted volume based features from FreeSurfer.
-
-Based on the literature review, most papers use VBM for data analysis and feature extraction. In this paper, one of the important goals was evaluating the FreeSurfer features for PD MRIs using machine learning techniques.  Generally, the experimental results show that the classification models need more information about the data that should be added to the current features, since these are low-level features and we need a set of high-level features as well. In future research, we are going to determine the useful general features that can be combined with the volume based extracted features.
-\begin{table*}[h]\small
-	\centering
-	\caption{Comparing performance of different classifiers}
-	\label{tab:comp}
-	\csvautotabular{compmet.csv}
-\end{table*}
 \section{Conclusion}
-We presented an automatic MRI based CAD system for diagnosing Parkinson’s Disease (PD) which is the second common neurodegenerative disease affecting elderly people. This disease is exposed by loss of neuro-transmitters that control body movements and there is no cure other than earlier diagnosis with better and more efficient treatment for patients. MR T1 images from the public PPMI PD data set is used. FreeSurfer is used for feature extraction and preprocessing. The decision model for classification of the extracted feature data is based on LR, RF and SVM methods. In the experimental results, the ability of these three types of classifiers for PD diagnosis are compared to each other. Results show that using only MRI is a potential option for PD diagnosis. This approach will avoid exposing the brain to harmful radiation based scans. In future work, the efficiency of the proposed method could be improved by adding high level features to the current ones. The classification rate with MRI needs to be improved to get close to those using raditation based scanning.
+
+
 \begin{thebibliography}{4}
 
 \bibitem{1} M. Anusuya and S. K. Katti, “Speech recognition by machine, a review,” arXiv preprint arXiv:1001.2267, 2010.
@@ -480,14 +333,14 @@ We presented an automatic MRI based CAD system for diagnosing Parkinson’s Dise
 \bibitem{20} Github: python-audio-effects. https://github.com/carlthome/python-audio-effects/blob/master/README.md
 
 \bibitem{21} Introduction to Computer Music: University of Indiana
-http://www.indiana.edu/~emusic/etext/synthesis/chapter4_filters.shtml
+http://www.indiana.edu/emusic/etext/synthesis/chapter4_filters.shtml
 
 \bibitem{22} U. Zölzer, Digital Audio Signal Processing, 
 New York: John Wiley and Sons, Inc., 1999.
 
 \bibitem{23} J. O. Smith, Introduction to digital filters: with audio applications. W3K Publishing, 2008.
 
-
+\bibitem{24} V. V ̈alim ̈aki, J. D. Parker, L. Savioja, J. O. Smith, and J. S. Abel, “Fifty years of artificial reverberation,” IEEE Transactions on Audio, Speech, and Language Processing, vol. 20, no. 5, pp. 1421–1448, 2012.
 
 
 \end{thebibliography}
