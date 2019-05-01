@@ -229,27 +229,37 @@ From the below output spectrogram table, low shelf filter tend to lower the wave
 
 Reverberation is an acoustic phenomenon, in which reflections cause the sound to be prolonged and ring even after the sound source stops \cite{24}
 
+From the below output spectrogram table with Reverberation effect added ......
+\begin{figure}[H]
+\includegraphics[scale=0.25]{reverb.jpeg}
+\caption{Spectrogram with Reverberation effect added to the origainal }
+\label{fig:framework}
+\end{figure}
+
 
 
 
 \section{Results and Discussion}
 Since we are using pre-recorded audio sample, we are not able to control the environment noise in the audio sample, so we add noise signals to the pure spectrogram manually. We test with two forms of noise generation. One using Gaussian method to generate white noise and the other one simply generates random noise. The purpose is to figure out a better approach to mimic white noise in real life and create noisy audio signal close to what we hear in our lives, which would provide better accuracy in testing the model with real noisy speech.\\
 
-We take a sample wav file and transfer it into an image file (figure A), then using Gaussian noise generation method to create Gaussian noise (figure B), then add it onto the original spectrogram to create noisy audio spectrogram (figure C), all three graphs are shown below.\\
+We take a sample wav file and transfer it into an image file (figure 12), then using Gaussian noise generation method to create Gaussian noise (figure 13), then add it onto the original spectrogram to create noisy audio spectrogram (figure 14), all three graphs are shown below.\\
 
 \begin{figure}[H]
+%\centering
 \includegraphics[scale=0.25]{figureA.png}
 \caption{Original Spectrogram}
 \label{fig:framework}
 \end{figure}
 
 \begin{figure}[H]
+%\centering
 \includegraphics[scale=0.25]{figureB.png}
 \caption{Gaussian noise}
 \label{fig:framework}
 \end{figure}
 
 \begin{figure}[H]
+%\centering
 \includegraphics[scale=0.25]{figureC.png}
 \caption{Original Spectrogram with Gaussian Noise added}
 \label{fig:framework}
@@ -258,21 +268,23 @@ We take a sample wav file and transfer it into an image file (figure A), then us
 Original Spectrogram with Random Noise added.\\
 
 \begin{figure}[H]
-\includegraphics[scale=0.25]{figureD.png}
+%\centering
+\includegraphics[scale=0.25]{figureE.png}
 \caption{Random Noise}
 \label{fig:framework}
 \end{figure}
 
 \begin{figure}[H]
-\includegraphics[scale=0.25]{figureE.png}
+%\centering
+\includegraphics[scale=0.25]{figureD.png}
 \caption{Original Spectrogram with Random Noise added}
 \label{fig:framework}
 \end{figure}
 
-The resulting spectrograms of these two methods appear to be visually similar, yet it is obvious from the noise signal graphs (figure B and D) that they are different. Gaussian method adds noise in a more uniform way which is more common in real life where the white noise permutes into speakers’ audio signals uniformly. The random method fulfills the task in all aspects, but it will not be as effective in our model during training compare to Gaussian noise addition, for the reason that the noise it generates could not mimic real-life white noise, and this will cause our model to be inaccurately trained. Hence, the Gaussian noise is supposed to be a better choice as white noise addition method for white noise addition onto wav file.\\
+The resulting spectrograms of these two methods appear to be visually similar, yet it is obvious from the noise signal graphs (figure 12 and 15) that they are different. Gaussian method adds noise in a more uniform way which is more common in real life where the white noise permutes into speakers’ audio signals uniformly. The random method fulfills the task in all aspects, but it will not be as effective in our model during training compare to Gaussian noise addition, for the reason that the noise it generates could not mimic real-life white noise, and this will cause our model to be inaccurately trained. Hence, the Gaussian noise is supposed to be a better choice as white noise addition method for white noise addition onto wav file.\\
 
 \section{Conclusion}
-
+We did not fully accomplish the goal we set for this project, so there is not yet a confirmable conclusion about the topic we were discussing about. Since this project is intuited by another published paper\cite{18}, the core concept is determinant. We did reach some partial result of functions required in this project. Gaussian noise generation requires fewer number of operations and achieves a more satisfying result in simulating environmental white noise.
 
 \begin{thebibliography}{4}
 
@@ -312,21 +324,21 @@ The resulting spectrograms of these two methods appear to be visually similar, y
 \bibitem{12} J.-C. Hou, S.-S. Wang, Y.-H. Lai, J.-C. Lin, Y. Tsao, H.-W. Chang, and H.-M. Wang. Audio-visual speech enhancement based on multimodal deep convolutional neural network. arXiv:1703.10893, 2017.
 %%% 11-8 12-9 13-10 14-11 15-12
 
-\bibitem{13} 
+\bibitem{13} Mandelbrot, Benoit B. "A fast fractional Gaussian noise generator." Water Resources Research 7.3 (1971): 543-553.
 
-\bibitem{14} 
+\bibitem{14} Helf, Brant M., and Peter L. Chu. "Reduction of background noise for speech enhancement." U.S. Patent No. 5,550,924. 27 Aug. 1996.
 
-\bibitem{15} 
+\bibitem{15} Kok, Chi-Wah. "Speech enhancement by noise masking." U.S. Patent Application No. 10/875,695.
 
-\bibitem{16} 
+\bibitem{16} Github: https://github.com/zhr1201/CNN-for-single-channel-speech-enhancement
 
-\bibitem{f}  
+\bibitem{f}  Github: https://github.com/tstafylakis/Lipreading-ResNet
 
-\bibitem{LR} 
+\bibitem{LR} Github: https://github.com/santi-pdp/segan
 
-\bibitem{17} 
+\bibitem{17} Loizou, Philipos C. Speech enhancement: theory and practice. CRC press, 2007.
 
-\bibitem{18} 
+\bibitem{18} Afouras, Triantafyllos, Joon Son Chung, and Andrew Zisserman. "The conversation: Deep audio-visual speech enhancement." arXiv preprint arXiv:1804.04121 (2018).
 
 \bibitem{19} PyPI official document-pysndfx 0.3.6: https://pypi.org/project/pysndfx/ 
 
